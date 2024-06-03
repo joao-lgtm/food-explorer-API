@@ -7,7 +7,7 @@ class UserCreateService {
         this.userRepository = userRepository;
     }
 
-    async execute({ name, email, password, address, number, zipcode }) {
+    async execute({ name, email, password, address,neighborhood, number, zipcode }) {
         const userExists = await this.userRepository.findByEmail(email);
 
         if (userExists) {
@@ -21,6 +21,7 @@ class UserCreateService {
             email,
             password: hashedPassword,
             address,
+            neighborhood,
             number,
             zipcode
         });
@@ -28,7 +29,7 @@ class UserCreateService {
         return user;
     }
 
-    async update({ id, name, email, password, old_password, address, number, zipcode, avatarFileName }) {
+    async update({ id, name, email, password, old_password, address,neighborhood, number, zipcode, avatarFileName }) {
         const user = await this.userRepository.findById(id);
 
         const diskStorage = new DiskStorage();
@@ -69,6 +70,7 @@ class UserCreateService {
         user.address = address ? address : user.address;
         user.number = number ? number : user.number;
         user.zipcode = zipcode ? zipcode : user.zipcode;
+        user.neighborhood = neighborhood ? neighborhood : user.neighborhood;
         user.avatar = fileName ? fileName : user.avatar;
 
         await this.userRepository.updateUser({

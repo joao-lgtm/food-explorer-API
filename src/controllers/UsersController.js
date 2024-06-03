@@ -5,13 +5,14 @@ const UserCreateService = require("../services/UserCreateService");
 
 class UserController {
     async create(request, response) {
-        const { name, email, password, address, number, zipcode } = request.body;
+        console.log(request.body)
+        const { name, email, password, address,neighborhood, number, zipcode } = request.body;
 
         const userRepository = new UserRepository();
 
         const userCreateService = new UserCreateService(userRepository);
 
-        await userCreateService.execute({ name, email, password, address, number, zipcode })
+        await userCreateService.execute({ name, email, password, address,neighborhood, number, zipcode })
 
         return response.status(201).json();
     }
@@ -19,7 +20,7 @@ class UserController {
 
     async update(request, response) {
         const user_id = request.user.id;
-        const { name, email, password, old_password, address, number, zipcode } = request.body;
+        const { name, email, password, old_password, address, neighborhood , number, zipcode } = request.body;
         let avatarFileName;
 
         const userRepository = new UserRepository();
@@ -29,9 +30,9 @@ class UserController {
             avatarFileName = request.file.filename;
         }
 
-        await userCreateService.update({ id: user_id, name, email, password, old_password, address, number, zipcode, avatarFileName })
+        await userCreateService.update({ id: user_id, name, email, password, old_password, address, neighborhood, number, zipcode, avatarFileName })
 
-        return response.json("teste")
+        return response.status(200).json();
     }
 
 }
