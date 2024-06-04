@@ -9,7 +9,7 @@ class DishesCreateService {
         const diskStorage = new DiskStorage();
         const fileName = await diskStorage.saveFile(img);
 
-        const dishesCreated = await this.dishesRepository.createDishes(fileName, name, category_id, ingredients, price, description);
+        const dishesCreated = await this.dishesRepository.createDishes({img: fileName, name, category_id, ingredients, price, description});
 
         return dishesCreated;
     }

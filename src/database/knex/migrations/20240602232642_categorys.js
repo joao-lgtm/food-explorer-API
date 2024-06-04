@@ -2,7 +2,6 @@
 exports.up = knex => knex.schema.createTable("categorys", table => {
     table.increments("id");
     table.text("name").notNullable();
-    table.integer("dishes_id").references("id").inTable("dishes").onDelete("CASCADE");
     table.timestamp("created_at").default(knex.fn.now());
 });
 
