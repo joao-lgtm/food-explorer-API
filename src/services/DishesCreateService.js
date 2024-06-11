@@ -26,15 +26,37 @@ class DishesCreateService {
         return dishesCreated;
     }
 
-    // async update({id, img, name, category_id, ingredients, price, description }) {
-    //     const diskStorage = new DiskStorage();
+    async update({ id, img, name, category_id, ingredients, price, description }) {
+        const diskStorage = new DiskStorage();
 
-    //     const user = await this.userRepository.findById(id);
-    //     const fileName = await diskStorage.saveFile(img);
+        const dishes = await this.dishesRepository.findById({ id });
+        let fileName;
 
+        if (img != null || img != undefined || img != '' || "") {
+            if (dishes.img) {
+                await diskStorage.deleteFile(dishes.img);
+            }
+            fileName = await diskStorage.saveFile(img);
+        } else {
+            fileName = dishes.img;
+        }
+        const dishesUpdate = await this.dishesRepository.updateDishes({ id, img: fileName, name, category_id, ingredients, price, description });
 
-    //     return dishesCreated;
-    // }
+        return dishesUpdate;
+    }
+
+    async delete({ id }) {
+        const diskStorage = new DiskStorage();
+        const dishes = await this.dishesRepository.findById({ id });
+
+        if (dishes.img) {
+            await diskStorage.deleteFile(dishes.img);
+        }
+
+        const dishesDelete = await this.dishesRepository.deleteDishes({ id });
+
+        return dishesDelete;
+    }
 }
 
 module.exports = DishesCreateService;

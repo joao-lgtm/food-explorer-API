@@ -4,12 +4,10 @@ const DishesCreateService = require("../services/DishesCreateService");
 class DishesController {
     async create(request, response) {
         const { name, category_id, price, description } = request.body;
-
         const ingredients = JSON.parse(request.body.ingredients);
         const img = request.file.filename;
-        
-        const dishesRepository = new DishesRepository();
 
+        const dishesRepository = new DishesRepository();
         const dishesCreateService = new DishesCreateService(dishesRepository);
 
         await dishesCreateService.execute({ img, name, category_id, ingredients, price, description })
@@ -19,7 +17,7 @@ class DishesController {
 
     async show(request, response) {
         const { id } = request.params;
-        
+
         const dishesRepository = new DishesRepository();
 
         const dishesCreateService = new DishesCreateService(dishesRepository);
@@ -30,8 +28,8 @@ class DishesController {
     }
 
     async index(request, response) {
-        const { dishes_name, ingredients_name} = request.query;
-        
+        const { dishes_name, ingredients_name } = request.query;
+
         const dishesRepository = new DishesRepository();
 
         const dishesCreateService = new DishesCreateService(dishesRepository);
@@ -43,20 +41,32 @@ class DishesController {
 
 
     async update(request, response) {
-        const { name, category_id, price, description } = request.body;
-
+        const { id, name, category_id, price, description } = request.body;
         const ingredients = JSON.parse(request.body.ingredients);
         const img = request.file.filename;
-        
+
         const dishesRepository = new DishesRepository();
 
         const dishesCreateService = new DishesCreateService(dishesRepository);
 
-        await dishesCreateService.execute({ img, name, category_id, ingredients, price, description })
+        await dishesCreateService.update({ id, img, name, category_id, ingredients, price, description })
 
-        return response.status(201).json();
+        return response.status(200).json();
     }
+
+    async delete(request, response) {
+        const { id } = request.params;
+
+        const dishesRepository = new DishesRepository();
+
+        const dishesCreateService = new DishesCreateService(dishesRepository);
+
+        await dishesCreateService.delete({ id })
+
+        return response.status(200).json();
+    }
+
 
 }
 
-module.exports =  DishesController;
+module.exports = DishesController;

@@ -5,7 +5,6 @@ const UserCreateService = require("../services/UserCreateService");
 
 class UserController {
     async create(request, response) {
-        console.log(request.body)
         const { name, email, password, address,neighborhood, number, zipcode } = request.body;
 
         const userRepository = new UserRepository();
