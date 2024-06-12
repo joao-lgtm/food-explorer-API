@@ -1,30 +1,52 @@
 const DishesRepository = require("../repositories/DishesRepository");
 const DishesCreateService = require("../services/DishesCreateService");
+const AppError = require("../utils/AppError");
 
 class DishesController {
     async create(request, response) {
-        const { name, category_id, price, description } = request.body;
-        const ingredients = JSON.parse(request.body.ingredients);
-        const img = request.file.filename;
+        try {
+            const { name, category_id, price, description } = request.body;
+            const ingredients = JSON.parse(request.body.ingredients);
+            const img = request.file.filename;
 
-        const dishesRepository = new DishesRepository();
-        const dishesCreateService = new DishesCreateService(dishesRepository);
+            if (!name || !category_id || !price || !description || !ingredients || !img) {
+                throw new AppError("Todos os Campos são Obrigatorios", 400);
+            }
 
-        await dishesCreateService.execute({ img, name, category_id, ingredients, price, description })
+            const dishesRepository = new DishesRepository();
+            const dishesCreateService = new DishesCreateService(dishesRepository);
 
-        return response.status(201).json();
+            await dishesCreateService.execute({ img, name, category_id, ingredients, price, description })
+
+            return response.status(201).json();
+
+        }
+        catch (error) {
+            return response.status(error.statusCode).json(error.message);
+        }
     }
 
+
+
+
     async show(request, response) {
-        const { id } = request.params;
+        try {
+            const { id } = request.params;
 
-        const dishesRepository = new DishesRepository();
+            const dishesRepository = new DishesRepository();
+            const dishesCreateService = new DishesCreateService(dishesRepository);
 
-        const dishesCreateService = new DishesCreateService(dishesRepository);
+            const dishes = await dishesCreateService.show({ id });
 
-        const dishes = await dishesCreateService.show({ id })
+            if (!dishes) {
+                throw new AppError("Prato não encontrado", 404);
+            }
 
-        return response.status(200).json(dishes);
+            return response.status(200).json(dishes);
+
+        } catch (error) {
+            return response.status(error.statusCode).json(error.message);
+        }
     }
 
     async index(request, response) {

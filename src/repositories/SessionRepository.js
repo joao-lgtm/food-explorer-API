@@ -19,16 +19,16 @@ class SessionRepository {
 
         const { secret, expiresIn } = authConfig.jwt;
 
-       
-    const token = sign({ role: user.role}, secret, {
-        subject: String(user.id),
-        expiresIn
-      });
-  
-    
-      delete user.password;
-       
-      return { user, token };
+
+        const token = sign({ role: user.role }, secret, {
+            subject: String(user.id),
+            expiresIn
+        });
+
+
+        delete user.password;
+
+        return { user, token };
     }
 }
 

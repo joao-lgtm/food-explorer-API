@@ -1,9 +1,14 @@
 const knex = require('../database/knex');
+const AppError = require('../utils/AppError');
 
 class DishesRepository {
     async findById({ id }) {
         const [dishes] = await knex("dishes").where({ id });
-        const ingredients = await knex("ingredients").where({ dishes_id: id }).orderBy("name")
+        const ingredients = await knex("ingredients").where({ dishes_id: id }).orderBy("name");
+
+        if(!dishes){
+            return null;
+        }
 
         return ({ ...dishes, ingredients });
     }
@@ -67,7 +72,7 @@ class DishesRepository {
             category_id,
             price,
             description
-        }).where({ id })
+        }).where({ id });
 
         const ingredientsInsert = ingredients.map(ingredient => {
             return {
