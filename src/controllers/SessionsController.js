@@ -16,10 +16,10 @@ class SessionController {
             sameSite: "none",
             secure: true,
             maxAge: 15 * 60 * 1000
-          });
-      
+        });
 
-        response.status(201).json( Session.user );
+
+        response.status(201).json({ user: Session.user });
     }
 }
 

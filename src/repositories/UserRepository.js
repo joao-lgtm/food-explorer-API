@@ -6,25 +6,24 @@ class UserRepository {
         return user;
     }
 
-    async findById(id){
+    async findById(id) {
         const user = await knex("users").where({ id }).first();
         return user;
-   }
+    }
 
-    async createUser({ name, email, password, address,neighborhood, number, zipcode }) {
+    async createUser({ name, email, password, street, neighborhood, number, city, uf, zipcode }) {
         const [userId] = await knex('users').insert({
             name,
             email,
             password,
-            address,
-            neighborhood,
-            number,
-            zipcode
         });
-        return { id: userId };
+
+        await knex("address").insert({ street, neighborhood, number, city, uf, zipcode, user_id: userId });
+
+
     }
 
-    async updateUser({ id, user}){
+    async updateUser({ id, user }) {
         await knex('users').where({ id }).update(user);
     }
 

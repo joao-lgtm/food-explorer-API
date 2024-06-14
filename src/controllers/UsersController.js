@@ -7,21 +7,22 @@ const AppError = require("../utils/AppError");
 class UserController {
     async create(request, response) {
         try {
-            const { name, email, password, address, neighborhood, number, zipcode } = request.body;
-
-            if( !name || !email || !password || !address || !neighborhood || !number || !zipcode){
-               throw new AppError("todos os campos são obrigatorios", 400);
+            const { name, email, password, street, neighborhood, number, city, uf, zipcode } = request.body;
+    
+            if (!name || !email || !password || !street || !neighborhood || !number || !city || !uf || !zipcode) {
+                throw new AppError("todos os campos são obrigatórios", 400);
             }
-
+    
             const userRepository = new UserRepository();
-
             const userCreateService = new UserCreateService(userRepository);
-
-            await userCreateService.execute({ name, email, password, address, neighborhood, number, zipcode })
-
-            return response.status(201).json("usuario criando com sucesso");
+    
+            await userCreateService.execute({ name, email, password, street, neighborhood, number, city, uf, zipcode });
+    
+            return response.status(201).json("usuario criado com sucesso");
         } catch (error) {
-            return response.status(error.statusCode).json(error.message)
+            const statusCode = error.statusCode || 500;
+            const message  = error.message || "Erro interno do servidor";
+            return response.status(statusCode).json({ message:  message});
         }
     }
 
