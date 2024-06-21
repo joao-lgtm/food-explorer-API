@@ -6,16 +6,17 @@ const AppError = require("../utils/AppError");
 
 class IngredientsController {
     async delete(request, response) {
-        try {
-            const { id } = request.params;
-            const ingredientsRepository = new IngredientsRepository();
-            const ingredientsService = new IngredientsService(ingredientsRepository);
+        const { id } = request.params;
+        
+        const ingredientsRepository = new IngredientsRepository();
+        const ingredientsService = new IngredientsService(ingredientsRepository);
 
+        try {
             await ingredientsService.delete({ id })
 
             return response.status(200).json("Ingrediente deletado");
         } catch (error) {
-            throw new AppError("Erro ao deletar ingrediente" , 500);
+             return response.status(error.statusCode).json({error: error.message});
         }
     }
 }

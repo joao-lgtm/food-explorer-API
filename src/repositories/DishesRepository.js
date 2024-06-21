@@ -1,5 +1,4 @@
 const knex = require('../database/knex');
-const AppError = require('../utils/AppError');
 
 class DishesRepository {
     async findById({ id }) {
@@ -15,33 +14,37 @@ class DishesRepository {
 
     async findByNameAndIngredients({ dishes_name, ingredients_name }) {
         let dishes;
+    
+
         if (ingredients_name) {
             const filterIngredientsName = ingredients_name.split(',').map(name => name.trim());
-
-            dishes = await knex("ingredients")
+    
+            dishes = await knex("dishes")
+                .innerJoin("ingredients", "dishes.id", "ingredients.dishes_id")
                 .whereLike("dishes.name", `%${dishes_name}%`)
                 .whereIn("ingredients.name", filterIngredientsName)
-                .innerJoin("dishes", "dishes.id", "ingredients.dishes_id")
+                .select("dishes.*")
+                .groupBy("dishes.id")
                 .orderBy("dishes.name");
-
+    
         } else {
             dishes = await knex("dishes")
                 .whereLike("name", `%${dishes_name}%`)
-                .orderBy("name")
+                .orderBy("name");
         }
-
+    
+        const dishesIds = dishes.map(dish => dish.id);
         const ingredientsDishes = await knex("ingredients")
-        const dishesWithIngredients = dishes.map(dishes => {
-            const dishesIngredients = ingredientsDishes.filter(ingredients => ingredients.dishes_id === dishes.id)
-
-
+            .whereIn("dishes_id", dishesIds);
+    
+        const dishesWithIngredients = dishes.map(dish => {
+            const dishIngredients = ingredientsDishes.filter(ingredient => ingredient.dishes_id === dish.id);
             return {
-                ...dishes,
-                ingredients: dishesIngredients
-            }
-
-        })
-
+                ...dish,
+                ingredients: dishIngredients
+            };
+        });
+    
         return dishesWithIngredients;
     }
 
@@ -60,8 +63,6 @@ class DishesRepository {
                 name: ingredient.name
             };
         });
-
-
         await knex("ingredients").insert(ingredientsInsert);
     }
 

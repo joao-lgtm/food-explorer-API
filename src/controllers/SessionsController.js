@@ -1,5 +1,5 @@
 const { compare } = require("bcryptjs");
-const SessionCreateService = require("../services/SessionCreateService");
+const SessionService = require("../services/SessionService");
 const SessionRepository = require("../repositories/SessionRepository");
 
 class SessionController {
@@ -7,9 +7,9 @@ class SessionController {
         const { email, password } = request.body;
 
         const sessionRepository = new SessionRepository();
-        const sessionCreateService = new SessionCreateService(sessionRepository);
+        const sessionService = new SessionService(sessionRepository);
 
-        const Session = await sessionCreateService.execute({ email, password });
+        const Session = await sessionService.execute({ email, password });
 
         response.cookie("token", Session.token, {
             httpOnly: true,

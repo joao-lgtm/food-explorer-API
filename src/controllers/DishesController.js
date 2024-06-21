@@ -1,28 +1,28 @@
 const DishesRepository = require("../repositories/DishesRepository");
-const DishesCreateService = require("../services/DishesCreateService");
+const DishesService = require("../services/DishesService");
 const AppError = require("../utils/AppError");
 
 class DishesController {
     async create(request, response) {
+        const { name, category_id, price, description } = request.body;
+        const ingredients = JSON.parse(request.body.ingredients);
+        const img = request.file.filename;
+
+        if (!name || !category_id || !price || !description || !ingredients || !img) {
+            throw new AppError("Todos os Campos são Obrigatorios", 400);
+        }
+
+        const dishesRepository = new DishesRepository();
+        const dishesService = new DishesService(dishesRepository);
+
         try {
-            const { name, category_id, price, description } = request.body;
-            const ingredients = JSON.parse(request.body.ingredients);
-            const img = request.file.filename;
-
-            if (!name || !category_id || !price || !description || !ingredients || !img) {
-                throw new AppError("Todos os Campos são Obrigatorios", 400);
-            }
-
-            const dishesRepository = new DishesRepository();
-            const dishesCreateService = new DishesCreateService(dishesRepository);
-
-            await dishesCreateService.execute({ img, name, category_id, ingredients, price, description })
+            await dishesService.execute({ img, name, category_id, ingredients, price, description })
 
             return response.status(201).json();
 
         }
         catch (error) {
-            return response.status(error.statusCode).json(error.message);
+             return response.status(error.statusCode).json({error: error.message});
         }
     }
 
@@ -30,22 +30,18 @@ class DishesController {
 
 
     async show(request, response) {
+        const { id } = request.params;
+
+        const dishesRepository = new DishesRepository();
+        const dishesService = new DishesService(dishesRepository);
+
         try {
-            const { id } = request.params;
-
-            const dishesRepository = new DishesRepository();
-            const dishesCreateService = new DishesCreateService(dishesRepository);
-
-            const dishes = await dishesCreateService.show({ id });
-
-            if (!dishes) {
-                throw new AppError("Prato não encontrado", 404);
-            }
+            const dishes = await dishesService.show({ id });
 
             return response.status(200).json(dishes);
 
         } catch (error) {
-            return response.status(error.statusCode).json(error.message);
+             return response.status(error.statusCode).json({error: error.message});
         }
     }
 
@@ -53,12 +49,15 @@ class DishesController {
         const { dishes_name, ingredients_name } = request.query;
 
         const dishesRepository = new DishesRepository();
+        const dishesService = new DishesService(dishesRepository);
 
-        const dishesCreateService = new DishesCreateService(dishesRepository);
+        try {
+            const dishes = await dishesService.index({ dishes_name, ingredients_name });
 
-        const dishes = await dishesCreateService.index({ dishes_name, ingredients_name });
-
-        return response.status(200).json(dishes);
+            return response.status(200).json(dishes);
+        } catch (error) {
+             return response.status(error.statusCode).json({error: error.message});
+        }
     }
 
 
@@ -68,24 +67,30 @@ class DishesController {
         const img = request.file.filename;
 
         const dishesRepository = new DishesRepository();
+        const dishesService = new DishesService(dishesRepository);
 
-        const dishesCreateService = new DishesCreateService(dishesRepository);
+        try {
+            await dishesService.update({ id, img, name, category_id, ingredients, price, description })
 
-        await dishesCreateService.update({ id, img, name, category_id, ingredients, price, description })
-
-        return response.status(200).json();
+            return response.status(200).json();
+        } catch (error) {
+             return response.status(error.statusCode).json({error: error.message});
+        }
     }
 
     async delete(request, response) {
         const { id } = request.params;
 
         const dishesRepository = new DishesRepository();
+        const dishesService = new DishesService(dishesRepository);
 
-        const dishesCreateService = new DishesCreateService(dishesRepository);
+        try {
+            await dishesService.delete({ id })
 
-        await dishesCreateService.delete({ id })
-
-        return response.status(200).json();
+            return response.status(200).json();
+        } catch (error) {
+             return response.status(error.statusCode).json({error: error.message});
+        }
     }
 
 

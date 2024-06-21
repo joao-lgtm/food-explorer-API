@@ -2,7 +2,7 @@ const { hash, compare } = require('bcryptjs');
 const AppError = require('../utils/AppError');
 const DiskStorage = require("../providers/DiskStorage")
 
-class UserCreateService {
+class UserService {
     constructor(userRepository) {
         this.userRepository = userRepository;
     }
@@ -16,23 +16,29 @@ class UserCreateService {
 
         const hashedPassword = await hash(password, 8);
 
-        const user = await this.userRepository.createUser({
-            name,
-            email,
-            password: hashedPassword,
-            street,
-            neighborhood,
-            number,
-            city,
-            uf,
-            zipcode
-        });
+        try {
+            const user = await this.userRepository.createUser({
+                name,
+                email,
+                password: hashedPassword,
+                street,
+                neighborhood,
+                number,
+                city,
+                uf,
+                zipcode
+            });
 
-        return user;
+            return user;
+        } catch (error) {
+            throw new AppError("Erro interno do servidor", 500)
+        }
     }
 
     async update({ id, name, email, password, old_password, address, neighborhood, number, zipcode, avatarFileName }) {
+
         const user = await this.userRepository.findById(id);
+
 
         const diskStorage = new DiskStorage();
 
@@ -75,11 +81,15 @@ class UserCreateService {
         user.neighborhood = neighborhood ? neighborhood : user.neighborhood;
         user.avatar = fileName ? fileName : user.avatar;
 
-        await this.userRepository.updateUser({
-            id, user
-        })
 
+        try {
+            await this.userRepository.updateUser({
+                id, user
+            })
+        } catch (error) {
+            throw new AppError("Erro em atualizar o usuario", 500)
+        }
     }
 }
 
-module.exports = UserCreateService;
+module.exports = UserService;
