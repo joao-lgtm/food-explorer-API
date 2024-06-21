@@ -59,9 +59,9 @@ class SalesOrderDetailsService {
         }
     }
 
-    async getQuantity({ sales_order_id, user_id }) {
+    async getQuantity({ id, user_id }) {
         try {
-            const sales = await this.salesOrderDetailsRepository.findByid({ sales_order_id, user_id });
+            const sales = await this.salesOrderDetailsRepository.findByid({ sales_order_id: id, user_id });
 
             const totalAmount = sales.reduce((acc, sale) => acc + sale.quantity, 0);
 

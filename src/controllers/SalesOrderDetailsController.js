@@ -36,14 +36,15 @@ class SalesOrderDetailsController {
 
     async show(request, response) {
         const user_id = request.user.id;
-        const { sales_order_id } = request.body;
+        const { id } = request.params;
+        console.log()
 
         const salesOrderDetailsRepository = new SalesOrderDetailsRepository();
         const salesOrderDetailsService = new SalesOrderDetailsService(salesOrderDetailsRepository);
 
         try {
-            const quantity = await salesOrderDetailsService.getQuantity({ sales_order_id, user_id });
-            return response.status(200).json({ quantity });
+            const quantity = await salesOrderDetailsService.getQuantity({ id, user_id });
+            return response.status(200).json(quantity);
         } catch (error) {
             return response.status(error.statusCode).json({ error: error.message });
         }

@@ -9,6 +9,6 @@ const salesOrderDetailsController = new SalesOrderDetailsController();
 
 salesOrderDetailsRoutes.delete("/", ensureAutheticated, salesOrderDetailsController.delete);
 salesOrderDetailsRoutes.patch("/", ensureAutheticated, salesOrderDetailsController.update);
-salesOrderDetailsRoutes.get("/", ensureAutheticated, salesOrderDetailsController.show);
+salesOrderDetailsRoutes.get("/:id", ensureAutheticated, salesOrderDetailsController.show);
 
 module.exports = salesOrderDetailsRoutes;
