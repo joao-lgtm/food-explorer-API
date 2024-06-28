@@ -37,7 +37,6 @@ class SalesOrderDetailsController {
     async show(request, response) {
         const user_id = request.user.id;
         const { id } = request.params;
-        console.log()
 
         const salesOrderDetailsRepository = new SalesOrderDetailsRepository();
         const salesOrderDetailsService = new SalesOrderDetailsService(salesOrderDetailsRepository);

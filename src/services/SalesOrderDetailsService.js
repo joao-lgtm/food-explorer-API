@@ -10,7 +10,6 @@ class SalesOrderDetailsService {
         const sales = await this.salesOrderDetailsRepository.findByid({ sales_order_id, user_id });
         const salesExits = sales.find((sales) => sales.details_id === Number(detail_id));
 
-        console.log(sales)
         if (!salesExits) {
             throw new AppError("Detalhe não existe", 404);
         }
