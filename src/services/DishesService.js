@@ -7,15 +7,10 @@ class DishesService {
     }
 
 
-    async index({ dishes_name, ingredients_name }) {
-        const dishes = await this.dishesRepository.findByNameAndIngredients({ dishes_name, ingredients_name })
-
-        if (!dishes.length) {
-            throw new AppError("Nenhum prato encontrado", 404);
-        }
-
+    async index({ disher_ingredients }) {
         try {
-            return dishes
+            const dishes = await this.dishesRepository.findByNameAndIngredients({ disher_ingredients });
+            return dishes;
         } catch (error) {
             throw new AppError("Erro ao buscar os prato", 400);
         }

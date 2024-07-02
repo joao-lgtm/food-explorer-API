@@ -22,7 +22,7 @@ class DishesController {
 
         }
         catch (error) {
-             return response.status(error.statusCode).json({error: error.message});
+            return response.status(error.statusCode).json({ error: error.message });
         }
     }
 
@@ -37,26 +37,37 @@ class DishesController {
 
         try {
             const dishes = await dishesService.show({ id });
-
+            console.log(dishes)
             return response.status(200).json(dishes);
 
         } catch (error) {
-             return response.status(error.statusCode).json({error: error.message});
+            return response.status(error.statusCode).json({ error: error.message });
         }
     }
 
     async index(request, response) {
-        const { dishes_name, ingredients_name } = request.query;
+        const { disher_ingredients } = request.query;
 
         const dishesRepository = new DishesRepository();
         const dishesService = new DishesService(dishesRepository);
 
         try {
-            const dishes = await dishesService.index({ dishes_name, ingredients_name });
+            const dishes = await dishesService.index({ disher_ingredients });
 
-            return response.status(200).json(dishes);
+            const convertObjectToArray = (obj) => {
+                const arrayValue = [];
+
+                Object.keys(obj).forEach(key => {
+                    arrayValue.push({ key, value: obj[key] });
+                })
+                return arrayValue;
+            }
+
+            const objectToArray = convertObjectToArray(dishes);
+
+            return response.status(200).json(objectToArray);
         } catch (error) {
-             return response.status(error.statusCode).json({error: error.message});
+            return response.status(error.statusCode).json({ error: error.message });
         }
     }
 
@@ -74,7 +85,7 @@ class DishesController {
 
             return response.status(200).json();
         } catch (error) {
-             return response.status(error.statusCode).json({error: error.message});
+            return response.status(error.statusCode).json({ error: error.message });
         }
     }
 
@@ -89,7 +100,7 @@ class DishesController {
 
             return response.status(200).json();
         } catch (error) {
-             return response.status(error.statusCode).json({error: error.message});
+            return response.status(error.statusCode).json({ error: error.message });
         }
     }
 
