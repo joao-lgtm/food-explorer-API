@@ -20,6 +20,25 @@ class SalesOrderController {
         }
     }
 
+
+    async showAll(request, response) {
+        const user_id = request.user.id;
+
+
+
+        const salesOrderRepository = new SalesOrderRepository();
+        const salesOrderService = new SalesOrderService(salesOrderRepository);
+
+        try {
+            const salesOrder = await salesOrderService.getAllOrders({ user_id });
+
+            return response.status(200).json(salesOrder);
+        }
+        catch (error) {
+             return response.status(error.statusCode).json({error: error.message});
+        }
+    }
+
     async index(request, response) {
 
         const { id } = request.params;

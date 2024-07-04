@@ -18,6 +18,20 @@ class SalesOrderService {
         }
     }
 
+    async getAllOrders({ user_id }) {
+        try {
+            const salesOrder = await this.salesOrderRepository.findAllOrder({ user_id });
+
+            if (!salesOrder) {
+                throw new AppError("Não há pedidos existentes", 404);
+            }
+            return salesOrder;
+
+        } catch (error) {
+            throw new AppError(error.message || "Erro ao buscar os pedidos", error.statusCode || 400);
+        }
+    }
+
     async getOrderById({ user_id, id }) {
         try {
             const salesOrder = await this.salesOrderRepository.findOrderById({ user_id, id });

@@ -2,15 +2,49 @@ const knex = require('../database/knex');
 
 class SalesOrderRepository {
     async findOrder({ user_id }) {
-        const sales_order = await knex("sales_order").where({ user_id: user_id }).whereNot({ status: 2 }).whereNot({ status: 1 });
+        const sales_order = await knex("sales_order").where({ user_id }).whereNot({ status: 2 }).whereNot({ status: 1 });
 
 
         return sales_order;
 
     }
+     
+    async findAllOrder({ user_id }) {
+        const sales_order = await knex("sales_order").where({ user_id });
+        
+        if (!sales_order || sales_order.length === 0) {
+            return null;
+        }
+    
+        const sales_orders = await Promise.all(sales_order.map(async (order) => {
+            const detail = await knex("sales_order_details")
+                .innerJoin("dishes", "sales_order_details.dishes_id", "dishes.id")
+                .where({ "sales_order_details.sales_order_id": order.id })
+                .select(
+                    "sales_order_details.id",
+                    "sales_order_details.sales_order_id",
+                    "sales_order_details.dishes_id",
+                    "sales_order_details.quantity",
+                    "sales_order_details.value",
+                    "sales_order_details.created_at",
+                    "sales_order_details.update_date",
+                    "dishes.img",
+                    "dishes.name",
+                    "dishes.category_id",
+                    "dishes.price",
+                    "dishes.description"
+                );
+    
+            return { ...order, detail };
+        }));
+    
+    
+        return sales_orders;
+    }
+
 
     async findOrderByUser({ user_id }) {
-        const [sales_order] = await knex("sales_order").where({ user_id });
+        const [sales_order] = await knex("sales_order").where({ user_id }).whereNot({ status: 2 }).whereNot({ status: 1 });
 
         if (!sales_order) {
             return null;
@@ -21,7 +55,7 @@ class SalesOrderRepository {
 
     async findOrderById({ user_id, id }) {
 
-        const [sales_order] = await knex("sales_order").where({ user_id, id });
+        const [sales_order] = await knex("sales_order").where({ user_id, id }).whereNot({ status: 2 }).whereNot({ status: 1 });
 
         if (!sales_order) {
             return null;
@@ -111,7 +145,7 @@ class SalesOrderRepository {
             });
     }
 
-    async updateOrderPriceWithDetails({ id, user_id, salesValue, old_price, newPrice,operation  }) {
+    async updateOrderPriceWithDetails({ id, user_id, salesValue, old_price, newPrice, operation }) {
         const date = new Date();
 
         let updatedPrice;

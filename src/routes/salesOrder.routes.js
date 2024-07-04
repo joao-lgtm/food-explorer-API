@@ -9,6 +9,7 @@ const salesOrderController = new SalesOrderController();
 
 salesOrderRoutes.post("/", ensureAuthenticated, salesOrderController.create);
 salesOrderRoutes.get("/", ensureAuthenticated, salesOrderController.show);
+salesOrderRoutes.get("/all", ensureAuthenticated, salesOrderController.showAll);
 salesOrderRoutes.get("/:id", ensureAuthenticated, salesOrderController.index);
 salesOrderRoutes.delete("/:id", ensureAuthenticated, salesOrderController.delete);
 

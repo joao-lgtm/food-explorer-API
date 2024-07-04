@@ -6,7 +6,7 @@ class SalesOrderDetailsRepository {
         const details = await knex("sales_order_details")
             .innerJoin("sales_order", "sales_order_details.sales_order_id", "sales_order.id")
             .innerJoin("dishes", "sales_order_details.dishes_id", "dishes.id")
-            .where({ "sales_order.id": sales_order_id, "sales_order.user_id": user_id })
+            .where({ "sales_order.id": sales_order_id, "sales_order.user_id": user_id }).whereNot({ status: 2 }).whereNot({ status: 1 })
             .select(
                 "sales_order_details.id as details_id",
                 "sales_order_details.sales_order_id",
