@@ -8,16 +8,16 @@ class SalesOrderRepository {
         return sales_order;
 
     }
-     
+
     async findAllOrder({ user_id }) {
-        const sales_order = await knex("sales_order").where({ user_id });
-        
+        const sales_order = await knex("sales_order").where({ user_id }).orderBy("created_at", "desc");
+
         if (!sales_order || sales_order.length === 0) {
             return null;
         }
-    
+
         const sales_orders = await Promise.all(sales_order.map(async (order) => {
-            const detail = await knex("sales_order_details")
+            const details = await knex("sales_order_details")
                 .innerJoin("dishes", "sales_order_details.dishes_id", "dishes.id")
                 .where({ "sales_order_details.sales_order_id": order.id })
                 .select(
@@ -34,11 +34,11 @@ class SalesOrderRepository {
                     "dishes.price",
                     "dishes.description"
                 );
-    
-            return { ...order, detail };
+
+            return { ...order, details };
         }));
-    
-    
+
+
         return sales_orders;
     }
 
