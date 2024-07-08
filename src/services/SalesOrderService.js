@@ -14,7 +14,7 @@ class SalesOrderService {
             return salesOrder;
 
         } catch (error) {
-            throw new AppError(error.message || "Erro ao buscar os pedidos", error.statusCode || 400);
+            throw new AppError("Erro ao buscar os pedidos", 400);
         }
     }
 
@@ -28,7 +28,7 @@ class SalesOrderService {
             return salesOrder;
 
         } catch (error) {
-            throw new AppError(error.message || "Erro ao buscar os pedidos", error.statusCode || 400);
+            throw new AppError( "Erro ao buscar os pedidos", 400);
         }
     }
 
@@ -42,7 +42,7 @@ class SalesOrderService {
 
             return salesOrder;
         } catch (error) {
-            throw new AppError(error.message || "Erro ao buscar os pedidos", error.statusCode || 400);
+            throw new AppError("Erro ao buscar os pedidos", 400);
         }
     }
 

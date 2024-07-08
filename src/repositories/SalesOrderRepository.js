@@ -61,6 +61,8 @@ class SalesOrderRepository {
             return null;
         }
 
+        const address = await knex("address").where({ user_id })
+
         const details = await knex("sales_order_details")
             .innerJoin("dishes", "sales_order_details.dishes_id", "dishes.id")
             .where({ "sales_order_details.sales_order_id": id })
@@ -79,14 +81,16 @@ class SalesOrderRepository {
                 "dishes.description"
             );
 
-        return { ...sales_order, details };
+        return { ...sales_order, details,address };
     }
 
 
     async createOrder({ dishes_id, price, quantity, user_id }) {
+        const [address_id] = await knex('address').where({ user_id })
         const [sales_order_id] = await knex('sales_order').insert({
             price: Number((price * quantity).toFixed(2)),
-            user_id
+            user_id,
+            address_id: address_id.id
         })
 
         await knex("sales_order_details").insert({
