@@ -37,7 +37,6 @@ class DishesController {
 
         try {
             const dishes = await dishesService.show({ id });
-            console.log(dishes)
             return response.status(200).json(dishes);
 
         } catch (error) {

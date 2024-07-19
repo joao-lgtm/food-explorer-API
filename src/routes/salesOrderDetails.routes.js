@@ -3,12 +3,14 @@ const SalesOrderDetailsController = require("../controllers/SalesOrderDetailsCon
 
 const ensureAutheticated = require("../middleware/ensureAutheticated");
 
-const salesOrderDetailsRoutes = Router();
-
 const salesOrderDetailsController = new SalesOrderDetailsController();
 
-salesOrderDetailsRoutes.delete("/", ensureAutheticated, salesOrderDetailsController.delete);
-salesOrderDetailsRoutes.patch("/", ensureAutheticated, salesOrderDetailsController.update);
-salesOrderDetailsRoutes.get("/:id", ensureAutheticated, salesOrderDetailsController.show);
+const salesOrderDetailsRoutes = Router();
+
+salesOrderDetailsRoutes.use(ensureAutheticated)
+
+salesOrderDetailsRoutes.delete("/", salesOrderDetailsController.delete);
+salesOrderDetailsRoutes.patch("/", salesOrderDetailsController.update);
+salesOrderDetailsRoutes.get("/:id", salesOrderDetailsController.show);
 
 module.exports = salesOrderDetailsRoutes;
