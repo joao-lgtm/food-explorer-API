@@ -80,15 +80,17 @@ class DishesRepository {
             description
         }).where({ id });
 
-        const ingredientsInsert = ingredients.map(ingredient => {
-            return {
-                dishes_id: id,
-                name: ingredient.name
-            };
-        });
+        if (ingredients.length > 0) {
+            const ingredientsInsert = ingredients.map(ingredient => {
+                return {
+                    dishes_id: id,
+                    name: ingredient.name
+                };
+            });
 
-
-        await knex("ingredients").insert(ingredientsInsert);
+            await knex("ingredients").insert(ingredientsInsert);
+        }
+        
     }
 
 

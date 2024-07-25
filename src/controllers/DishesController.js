@@ -74,7 +74,7 @@ class DishesController {
     async update(request, response) {
         const { id, name, category_id, price, description } = request.body;
         const ingredients = JSON.parse(request.body.ingredients);
-        const img = request.file.filename;
+        const img = request.file != undefined || null ? request.file.filename : "";
 
         const dishesRepository = new DishesRepository();
         const dishesService = new DishesService(dishesRepository);

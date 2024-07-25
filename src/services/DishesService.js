@@ -53,7 +53,9 @@ class DishesService {
 
             let fileName;
 
-            if (img != null || img != undefined || img != '' || "") {
+            console.log(img != null && img != undefined && img != '' && img != "")
+
+            if (img != null && img != undefined && img != '' && img != "") {
                 if (dishes.img) {
                     await diskStorage.deleteFile(dishes.img);
                 }
