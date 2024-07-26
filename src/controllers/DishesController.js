@@ -7,7 +7,7 @@ class DishesController {
         const { name, category_id, price, description } = request.body;
         const ingredients = JSON.parse(request.body.ingredients);
         const img = request.file.filename;
-
+        
         if (!name || !category_id || !price || !description || !ingredients || !img) {
             throw new AppError("Todos os Campos são Obrigatorios", 400);
         }
