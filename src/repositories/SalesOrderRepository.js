@@ -86,9 +86,9 @@ class SalesOrderRepository {
 
 
     async createOrder({ dishes_id, price, quantity, user_id }) {
-        const [address_id] = await knex('address').where({ user_id })
+        const [address_id] = await knex('address').where({ user_id });
         const [sales_order_id] = await knex('sales_order').insert({
-            price: Number((price * quantity).toFixed(2)),
+            price: String(Number(price * quantity).toFixed(2)),
             user_id,
             address_id: address_id.id
         })
@@ -105,7 +105,7 @@ class SalesOrderRepository {
         const date = new Date();
         await knex("sales_order")
             .update({
-                price: Number((old_price + (price * quantity)).toFixed(2)),
+                price: String(Number((old_price + (price * quantity)).toFixed(2))),
                 update_date: date.toISOString()
             })
             .where({

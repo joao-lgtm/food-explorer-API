@@ -1,6 +1,6 @@
 exports.up = knex => knex.schema.createTable("sales_order", table => {
     table.increments("id");
-    table.float("price");
+    table.text("price");
     table.integer("user_id").references("id").inTable("users");
     table.integer("address_id").references("id").inTable("address");
     table.integer("status").defaultTo(0); // status 0 - Pendete, status 1 - reparando , status 2 - Entregue
