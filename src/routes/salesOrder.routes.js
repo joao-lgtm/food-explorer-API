@@ -11,7 +11,7 @@ salesOrderRoutes.use(ensureAuthenticated);
 
 salesOrderRoutes.post("/", salesOrderController.create);
 salesOrderRoutes.get("/", salesOrderController.show);
-salesOrderRoutes.get("/all", salesOrderController.showAll);
+salesOrderRoutes.get("/all", verifyUserAuthorization(["admin"]), salesOrderController.showAll);
 salesOrderRoutes.get("/user/all", salesOrderController.showAllUserId);
 salesOrderRoutes.get("/:id", salesOrderController.index);
 salesOrderRoutes.delete("/:id", salesOrderController.delete);
