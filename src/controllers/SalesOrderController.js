@@ -20,8 +20,22 @@ class SalesOrderController {
         }
     }
 
-
     async showAll(request, response) {
+        const salesOrderRepository = new SalesOrderRepository();
+        const salesOrderService = new SalesOrderService(salesOrderRepository);
+
+        try {
+            const salesOrder = await salesOrderService.getAllOrders();
+
+            return response.status(200).json(salesOrder);
+        }
+        catch (error) {
+             return response.status(error.statusCode).json({error: error.message});
+        }
+    }
+
+
+    async showAllUserId(request, response) {
         const user_id = request.user.id;
 
 
@@ -30,7 +44,7 @@ class SalesOrderController {
         const salesOrderService = new SalesOrderService(salesOrderRepository);
 
         try {
-            const salesOrder = await salesOrderService.getAllOrders({ user_id });
+            const salesOrder = await salesOrderService.getAllOrdersByUserId({ user_id });
 
             return response.status(200).json(salesOrder);
         }

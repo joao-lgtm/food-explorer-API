@@ -18,9 +18,9 @@ class SalesOrderService {
         }
     }
 
-    async getAllOrders({ user_id }) {
+    async getAllOrdersByUserId({ user_id }) {
         try {
-            const salesOrder = await this.salesOrderRepository.findAllOrder({ user_id });
+            const salesOrder = await this.salesOrderRepository.findAllOrderByUserId({ user_id });
 
             if (!salesOrder) {
                 throw new AppError("Não há pedidos existentes", 404);
@@ -29,6 +29,20 @@ class SalesOrderService {
 
         } catch (error) {
             throw new AppError( "Erro ao buscar os pedidos", 400);
+        }
+    }
+
+    async getAllOrders() {
+        try {
+            const salesOrder = await this.salesOrderRepository.findAllOrders();
+
+            if (!salesOrder) {
+                throw new AppError("Pedido não existe", 404);
+            }
+
+            return salesOrder;
+        } catch (error) {
+            throw new AppError("Erro ao buscar os pedidos", 400);
         }
     }
 

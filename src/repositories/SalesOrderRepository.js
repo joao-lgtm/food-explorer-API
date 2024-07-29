@@ -9,8 +9,41 @@ class SalesOrderRepository {
 
     }
 
-    async findAllOrder({ user_id }) {
+    async findAllOrderByUserId({ user_id }) {
         const sales_order = await knex("sales_order").where({ user_id }).orderBy("created_at", "desc");
+
+        if (!sales_order || sales_order.length === 0) {
+            return null;
+        }
+
+        const sales_orders = await Promise.all(sales_order.map(async (order) => {
+            const details = await knex("sales_order_details")
+                .innerJoin("dishes", "sales_order_details.dishes_id", "dishes.id")
+                .where({ "sales_order_details.sales_order_id": order.id })
+                .select(
+                    "sales_order_details.id",
+                    "sales_order_details.sales_order_id",
+                    "sales_order_details.dishes_id",
+                    "sales_order_details.quantity",
+                    "sales_order_details.value",
+                    "sales_order_details.created_at",
+                    "sales_order_details.update_date",
+                    "dishes.img",
+                    "dishes.name",
+                    "dishes.category_id",
+                    "dishes.price",
+                    "dishes.description"
+                );
+
+            return { ...order, details };
+        }));
+
+
+        return sales_orders;
+    }
+
+    async findAllOrders() {
+        const sales_order = await knex("sales_order").orderBy("created_at", "desc");
 
         if (!sales_order || sales_order.length === 0) {
             return null;
