@@ -1,9 +1,13 @@
 const DiskStorage = require("../providers/DiskStorage");
 const AppError = require("../utils/AppError");
+const SalesOrderRepository = require("../repositories/SalesOrderRepository");
+const SalesOrderDetailsRepository = require("../repositories/SalesOrderDetailsRepository");
 
 class DishesService {
     constructor(dishesRepository) {
         this.dishesRepository = dishesRepository;
+        this.salesOrderRepository = new SalesOrderRepository(dishesRepository);
+        this.salesOrderDetailsRepository = new SalesOrderDetailsRepository(dishesRepository);
     }
 
 
@@ -78,17 +82,13 @@ class DishesService {
             throw new AppError("Prato não encontrado", 404);
         }
 
-        try {
             if (dishes.img) {
                 await diskStorage.deleteFile(dishes.img);
             }
 
             const dishesDelete = await this.dishesRepository.deleteDishes({ id });
-
+     
             return dishesDelete;
-        } catch (error) {
-            throw new AppError("Erro ao deletar o prato", 400);
-        }
 
     }
 }

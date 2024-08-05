@@ -39,8 +39,8 @@ class SalesOrderDetailsService {
         }
 
         const salesValue = salesExits.order_price;
-        const old_price = Number((salesExits.quantity * salesExits.value).toFixed(2));
-        const newPrice = Number((quantity * salesExits.value).toFixed(2));
+        const old_price = String((Number(salesExits.value).toFixed(2) * salesExits.quantity).toFixed(2));
+        const newPrice = String((quantity * Number(salesExits.value).toFixed(2)).toFixed(2));
 
         let operation;
         if (salesExits.quantity > quantity) {

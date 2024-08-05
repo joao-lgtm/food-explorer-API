@@ -95,7 +95,16 @@ class DishesRepository {
 
 
     async deleteDishes({ id }) {
-        await knex('dishes').delete().where({ id })
+        const sales_order_details = await knex("sales_order_details").where({ dishes_id: id });
+
+
+        
+
+        return sales_order_details
+
+        // await knex('dishes').delete().where({ id })
+
+        // await knex('ingredients').delete().where({ dishes_id: id });
     }
 
 

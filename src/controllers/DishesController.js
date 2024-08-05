@@ -7,7 +7,7 @@ class DishesController {
         const { name, category_id, price, description } = request.body;
         const ingredients = JSON.parse(request.body.ingredients);
         const img = request.file.filename;
-        
+
         if (!name || !category_id || !price || !description || !ingredients || !img) {
             throw new AppError("Todos os Campos são Obrigatorios", 400);
         }
@@ -88,19 +88,19 @@ class DishesController {
         }
     }
 
+
+    // TODO: ajustes no delete
+
+
     async delete(request, response) {
-        const { id } = request.params;
+    //     const { id } = request.params;
 
-        const dishesRepository = new DishesRepository();
-        const dishesService = new DishesService(dishesRepository);
+    //     const dishesRepository = new DishesRepository();
+    //     const dishesService = new DishesService(dishesRepository);
 
-        try {
-            await dishesService.delete({ id })
+    //     const dishers = await dishesService.delete({ id })
 
-            return response.status(200).json();
-        } catch (error) {
-            return response.status(error.statusCode).json({ error: error.message });
-        }
+    //     return response.status(200).json();
     }
 
 

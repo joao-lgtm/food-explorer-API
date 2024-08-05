@@ -35,7 +35,6 @@ class SalesOrderService {
     async getAllOrders() {
         try {
             const salesOrder = await this.salesOrderRepository.findAllOrders();
-
             if (!salesOrder) {
                 throw new AppError("Pedido não existe", 404);
             }
@@ -65,9 +64,8 @@ class SalesOrderService {
 
         try {
             let salesOrder;
-            if (!salesOrderExists) {
+            if (!salesOrderExists) {  
                 salesOrder = await this.salesOrderRepository.createOrder({ dishes_id, price, quantity, user_id });
-
             }
             else {
                 salesOrder = await this.salesOrderRepository.updateOrder({ dishes_id, price, quantity, user_id, sales_order_id: salesOrderExists.id, old_price: salesOrderExists.price });

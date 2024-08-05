@@ -121,7 +121,7 @@ class SalesOrderRepository {
     async createOrder({ dishes_id, price, quantity, user_id }) {
         const [address_id] = await knex('address').where({ user_id });
         const [sales_order_id] = await knex('sales_order').insert({
-            price: String(Number(price * quantity).toFixed(2)),
+            price: String((Number(price * quantity)).toFixed(2)),
             user_id,
             address_id: address_id.id
         })
@@ -138,7 +138,7 @@ class SalesOrderRepository {
         const date = new Date();
         await knex("sales_order")
             .update({
-                price: String(Number((old_price + (price * quantity)).toFixed(2))),
+                price: String((Number(old_price) + Number(price * quantity)).toFixed(2)),
                 update_date: date.toISOString()
             })
             .where({
@@ -153,7 +153,7 @@ class SalesOrderRepository {
                 sales_order_id,
                 dishes_id,
                 quantity,
-                value: price
+                value: String(Number(price).toFixed(2))
             });
         } else {
             await knex("sales_order_details")
@@ -184,12 +184,11 @@ class SalesOrderRepository {
 
     async updateOrderPriceWithDetails({ id, user_id, salesValue, old_price, newPrice, operation }) {
         const date = new Date();
-
         let updatedPrice;
         if (operation === 'add') {
-            updatedPrice = Number((salesValue + (newPrice - old_price)).toFixed(2));
+            updatedPrice = (Number(salesValue) + Number(newPrice - old_price)).toFixed(2);
         } else if (operation === 'subtract') {
-            updatedPrice = Number((salesValue - (old_price - newPrice)).toFixed(2));
+            updatedPrice = (Number(salesValue) - Number(old_price - newPrice)).toFixed(2);
         } else {
             throw new AppError("Operação inválida", 400);
         }

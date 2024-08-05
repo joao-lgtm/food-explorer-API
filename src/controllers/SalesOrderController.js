@@ -21,9 +21,9 @@ class SalesOrderController {
     }
 
     async showAll(request, response) {
+       
         const salesOrderRepository = new SalesOrderRepository();
         const salesOrderService = new SalesOrderService(salesOrderRepository);
-
         try {
             const salesOrder = await salesOrderService.getAllOrders();
 

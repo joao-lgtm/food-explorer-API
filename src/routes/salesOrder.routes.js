@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const SalesOrderController = require("../controllers/SalesOrderController");
-
+const verifyUserAuthorization = require("../middleware/verifyUserAuthorization");
 const ensureAuthenticated = require("../middleware/ensureAutheticated");
 
 const salesOrderController = new SalesOrderController();
