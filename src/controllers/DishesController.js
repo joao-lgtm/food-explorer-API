@@ -1,5 +1,10 @@
 const DishesRepository = require("../repositories/DishesRepository");
 const DishesService = require("../services/DishesService");
+const SalesOrderService = require("../services/SalesOrderService");
+const SalesOrderRepository = require("../repositories/SalesOrderRepository");
+const SalesOrderDetailsService = require("../services/SalesOrderDetailsService");
+const SalesOrderDetailsRepository = require("../repositories/SalesOrderDetailsRepository");
+
 const AppError = require("../utils/AppError");
 
 class DishesController {
@@ -88,22 +93,33 @@ class DishesController {
         }
     }
 
-
-    // TODO: ajustes no delete
-
-
     async delete(request, response) {
-    //     const { id } = request.params;
+        const { id } = request.params;
 
-    //     const dishesRepository = new DishesRepository();
-    //     const dishesService = new DishesService(dishesRepository);
+        const dishesRepository = new DishesRepository();
+        const dishesService = new DishesService(dishesRepository);
 
-    //     const dishers = await dishesService.delete({ id })
+        const salesOrderDetailsRepository = new SalesOrderDetailsRepository();
+        const salesOrderDetailsService = new SalesOrderDetailsService(salesOrderDetailsRepository);
 
-    //     return response.status(200).json();
+        const dishers = await dishesService.findIds({ id });
+
+        if (dishers.length > 0) {
+            await Promise.all(dishers.map(async (disher) => {
+                await salesOrderDetailsService.deleteById({ sales_order_id: disher.sales_order_id, detail_id: disher.sales_order_details_id, user_id: disher.user_id });
+            }));
+
+            await dishesService.delete({ id, img: dishers[0].img });
+
+            return response.status(200).json();
+        } else {
+            const disherNotOrders = await dishesService.show({ id });
+
+            await dishesService.delete({ id, img: disherNotOrders.img });
+
+            return response.status(200).json();
+        }
     }
-
-
 }
 
 module.exports = DishesController;

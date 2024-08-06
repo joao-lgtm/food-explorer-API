@@ -90,24 +90,30 @@ class DishesRepository {
 
             await knex("ingredients").insert(ingredientsInsert);
         }
-        
+
     }
 
+
+    async findSalesOrderAndDishesById({ id }) {
+        const sales_order_details = await knex("sales_order_details")
+            .innerJoin("sales_order", "sales_order.id", "sales_order_details.sales_order_id")
+            .innerJoin("dishes", "dishes.id", "sales_order_details.dishes_id")
+            .where({ "sales_order_details.dishes_id": id })
+            .select(
+                "sales_order_details.id as sales_order_details_id",
+                "sales_order_details.sales_order_id",
+                "sales_order.user_id",
+                "dishes.img"
+            );
+    
+        return sales_order_details;
+    }
 
     async deleteDishes({ id }) {
-        const sales_order_details = await knex("sales_order_details").where({ dishes_id: id });
+       await knex('dishes').delete().where({ id });
 
-
-        
-
-        return sales_order_details
-
-        // await knex('dishes').delete().where({ id })
-
-        // await knex('ingredients').delete().where({ dishes_id: id });
+       return;
     }
-
-
 }
 
 module.exports = DishesRepository;

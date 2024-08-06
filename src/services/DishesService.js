@@ -74,23 +74,31 @@ class DishesService {
         }
     }
 
-    async delete({ id }) {
-        const diskStorage = new DiskStorage();
-        const dishes = await this.dishesRepository.findById({ id });
+    async findIds({ id }) {
+        const dishes = await this.dishesRepository.findSalesOrderAndDishesById({ id });
 
         if (!dishes) {
             throw new AppError("Prato não encontrado", 404);
         }
 
-            if (dishes.img) {
-                await diskStorage.deleteFile(dishes.img);
-            }
 
-            const dishesDelete = await this.dishesRepository.deleteDishes({ id });
+        return dishes;
+    }
+
+
+    async delete({ id, img }) {
+        const diskStorage = new DiskStorage();
+        
+        await this.dishesRepository.deleteDishes({ id });
+
+        if (img) {
+            await diskStorage.deleteFile(img);
+        }
+
      
-            return dishesDelete;
-
+        return;
     }
 }
+
 
 module.exports = DishesService;
