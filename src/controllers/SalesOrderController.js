@@ -16,12 +16,12 @@ class SalesOrderController {
             return response.status(200).json(salesOrder);
         }
         catch (error) {
-             return response.status(error.statusCode).json({error: error.message});
+            return response.status(error.statusCode).json({ error: error.message });
         }
     }
 
     async showAll(request, response) {
-       
+
         const salesOrderRepository = new SalesOrderRepository();
         const salesOrderService = new SalesOrderService(salesOrderRepository);
         try {
@@ -30,7 +30,7 @@ class SalesOrderController {
             return response.status(200).json(salesOrder);
         }
         catch (error) {
-             return response.status(error.statusCode).json({error: error.message});
+            return response.status(error.statusCode).json({ error: error.message });
         }
     }
 
@@ -49,12 +49,11 @@ class SalesOrderController {
             return response.status(200).json(salesOrder);
         }
         catch (error) {
-             return response.status(error.statusCode).json({error: error.message});
+            return response.status(error.statusCode).json({ error: error.message });
         }
     }
 
     async index(request, response) {
-
         const { id } = request.params;
         const user_id = request.user.id;
 
@@ -67,7 +66,7 @@ class SalesOrderController {
             return response.status(200).json(salesOrder);
         }
         catch (error) {
-            return response.status(error.statusCode).json({error: error.message});
+            return response.status(error.statusCode).json({ error: error.message });
         }
     }
 
@@ -83,7 +82,7 @@ class SalesOrderController {
 
             return response.status(201).json(salesOrder);
         } catch (error) {
-             return response.status(error.statusCode).json({error: error.message});
+            return response.status(error.statusCode).json({ error: error.message });
         }
     }
 
@@ -99,8 +98,20 @@ class SalesOrderController {
 
             return response.status(200).json("pedido exluido com sucesso");
         } catch (error) {
-             return response.status(error.statusCode).json({error: error.message});
+            return response.status(error.statusCode).json({ error: error.message });
         }
+    }
+
+    async update(request, response) {
+        const { sales_order_id, status } = request.body;
+
+        const salesOrderRepository = new SalesOrderRepository();
+        const salesOrderService = new SalesOrderService(salesOrderRepository);
+
+
+            await salesOrderService.update({ id: sales_order_id, status });
+
+            return response.status(200).json("pedido atualizado com sucesso");
     }
 }
 

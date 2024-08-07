@@ -15,5 +15,6 @@ salesOrderRoutes.get("/all", verifyUserAuthorization(["admin"]), salesOrderContr
 salesOrderRoutes.get("/user/all", salesOrderController.showAllUserId);
 salesOrderRoutes.get("/:id", salesOrderController.index);
 salesOrderRoutes.delete("/:id", salesOrderController.delete);
+salesOrderRoutes.patch("/", salesOrderController.update);
 
 module.exports = salesOrderRoutes;

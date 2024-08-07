@@ -1,4 +1,5 @@
 const knex = require('../database/knex');
+const AppError = require('../utils/AppError');
 
 class SalesOrderRepository {
     async findOrder({ user_id }) {
@@ -86,7 +87,7 @@ class SalesOrderRepository {
         return sales_order;
     }
 
-    async findOrderById({ user_id, id }) {
+    async findOrderByIdAndUserId({ user_id, id }) {
 
         const [sales_order] = await knex("sales_order").where({ user_id, id }).whereNot({ status: 2 }).whereNot({ status: 1 });
 
@@ -114,7 +115,7 @@ class SalesOrderRepository {
                 "dishes.description"
             );
 
-        return { ...sales_order, details,address };
+        return { ...sales_order, details, address };
     }
 
 
@@ -201,6 +202,25 @@ class SalesOrderRepository {
                 user_id: user_id,
                 id: id
             });
+    }
+
+    async updateStatusOrder({ id, status }) {
+        const date = new Date();
+        await knex("sales_order").update({
+            status: status,
+            update_date: date.toISOString()
+        })
+            .where({
+                id: id
+            });
+    }
+
+    async findOrderById({ id }) {
+        const sales_order = await knex("sales_order").where({ id });
+
+
+        return sales_order;
+
     }
 }
 

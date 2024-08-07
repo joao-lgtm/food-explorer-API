@@ -28,7 +28,7 @@ class SalesOrderService {
             return salesOrder;
 
         } catch (error) {
-            throw new AppError( "Erro ao buscar os pedidos", 400);
+            throw new AppError("Erro ao buscar os pedidos", 400);
         }
     }
 
@@ -47,7 +47,7 @@ class SalesOrderService {
 
     async getOrderById({ user_id, id }) {
         try {
-            const salesOrder = await this.salesOrderRepository.findOrderById({ user_id, id });
+            const salesOrder = await this.salesOrderRepository.findOrderByIdAndUserId({ user_id, id });
 
             if (!salesOrder) {
                 throw new AppError("Pedido não existe", 404);
@@ -64,7 +64,7 @@ class SalesOrderService {
 
         try {
             let salesOrder;
-            if (!salesOrderExists) {  
+            if (!salesOrderExists) {
                 salesOrder = await this.salesOrderRepository.createOrder({ dishes_id, price, quantity, user_id });
             }
             else {
@@ -80,7 +80,7 @@ class SalesOrderService {
 
     async delete({ id, user_id }) {
         const [salesOrderExists] = await this.salesOrderRepository.findOrder({ user_id });
-        
+
         if (!salesOrderExists) {
             throw new AppError("Pedido não existe", 404);
         }
@@ -91,6 +91,21 @@ class SalesOrderService {
         } catch (error) {
             throw new AppError("Erro ao deletar o pedido", 400);
         }
+    }
+
+    async update({ id, status }) {
+        const salesOrderExists = await this.salesOrderRepository.findOrderById({ id });
+
+        if (!salesOrderExists) {
+            throw new AppError("pedido não encotrado", 404);
+        }
+        try {
+            await this.salesOrderRepository.updateStatusOrder({ id, status })
+            return;
+        } catch (error) {
+            throw new AppError("Erro ao atualizar pedido")
+        }
+
     }
 }
 
