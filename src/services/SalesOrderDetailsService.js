@@ -11,7 +11,7 @@ class SalesOrderDetailsService {
         const salesExits = sales.find((sales) => sales.details_id === Number(detail_id));
 
         if (!salesExits) {
-            throw new AppError("Detalhe não existe", 404);
+            return;
         }
 
         try {

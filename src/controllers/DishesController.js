@@ -103,6 +103,7 @@ class DishesController {
         const salesOrderDetailsService = new SalesOrderDetailsService(salesOrderDetailsRepository);
 
         const dishers = await dishesService.findIds({ id });
+        
 
         if (dishers.length > 0) {
             await Promise.all(dishers.map(async (disher) => {
