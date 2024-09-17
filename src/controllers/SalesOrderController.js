@@ -26,7 +26,6 @@ class SalesOrderController {
         const salesOrderService = new SalesOrderService(salesOrderRepository);
         try {
             const salesOrder = await salesOrderService.getAllOrders();
-
             return response.status(200).json(salesOrder);
         }
         catch (error) {

@@ -3,7 +3,7 @@ const AppError = require('../utils/AppError');
 
 class SalesOrderRepository {
     async findOrder({ user_id }) {
-        const sales_order = await knex("sales_order").where({ user_id }).whereNot({ status: 2 }).whereNot({ status: 1 });
+        const sales_order = await knex("sales_order").where({ user_id }).whereNot({ status: 5 });
 
 
         return sales_order;
@@ -78,7 +78,7 @@ class SalesOrderRepository {
 
 
     async findOrderByUser({ user_id }) {
-        const [sales_order] = await knex("sales_order").where({ user_id }).whereNot({ status: 2 }).whereNot({ status: 1 });
+        const [sales_order] = await knex("sales_order").where({ user_id }).whereNot({ status: 5 });
 
         if (!sales_order) {
             return null;
@@ -89,7 +89,7 @@ class SalesOrderRepository {
 
     async findOrderByIdAndUserId({ user_id, id }) {
 
-        const [sales_order] = await knex("sales_order").where({ user_id, id }).whereNot({ status: 2 }).whereNot({ status: 1 });
+        const [sales_order] = await knex("sales_order").where({ user_id, id }).whereNot({ status: 5 });
 
         if (!sales_order) {
             return null;

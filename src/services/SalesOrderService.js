@@ -105,8 +105,8 @@ class SalesOrderService {
         } catch (error) {
             throw new AppError("Erro ao atualizar pedido")
         }
-
     }
+
 }
 
 
