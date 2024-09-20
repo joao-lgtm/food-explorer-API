@@ -1,10 +1,13 @@
 require("express-async-errors");
+require("dotenv/config");
+
+const uploadConfig = require("./configs/upload");
+
 const cors = require("cors");
 const express = require("express");
 const routes = require("./routes");
 const cookieParser  = require("cookie-parser");
 const AppError = require("./utils/AppError");
-const uploadConfig = require("./configs/upload");
 
 const app = express();
 app.use(express.json());
@@ -33,5 +36,5 @@ app.use((err, request, response, next) => {
 });
 
 
-const PORT = 3333;
+const PORT = process.env.SERVER_PORT || 3000;
 app.listen(PORT, () => console.log(`Server is running on Port ${PORT}`));
