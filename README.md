@@ -58,6 +58,26 @@ Technologies used in the project:
 *   javascript
 *   node.js
 
+<h2>Deploy</h2>
+
+  <p>
+    1. Connect Git Repository: In the Render dashboard, create a new service and link it to your GitHub or GitLab repository where the code is hosted.
+  </p>
+  <p>
+    2. Configure Environment: Set up the necessary environment variables (e.g., API keys, database settings) directly in the Render interface.
+  </p>
+  <p>
+    3. Automatic Deploy: Render will automatically deploy every time you push changes to the configured branch (usually main or master).
+  </p>
+  <p>
+    4. Build & Start: Render will build the application based on the Dockerfile or default language settings (Node, Python, etc.), and start the service.
+  </p>
+  <p>
+    5. Logs & Monitoring: After deployment, check the logs and use Render's monitoring tools to ensure the service is running correctly.
+  </p>
+  
 <h2>🛡️ License:</h2>
 
 This project is licensed under the Esse projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
+
+
