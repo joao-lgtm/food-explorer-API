@@ -13,7 +13,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser()); 
 app.use(cors({
-  origin: ["http://localhost:5173", "http://127.0.0.1:5173/"],
+  origin: ["http://localhost:5173", "http://127.0.0.1:5173/",  "https://main--dapper-phoenix-9bf0cb.netlify.app"],
   credentials: true
 }));
 app.use("/files",express.static(uploadConfig.UPLOADS_FOLDER));
